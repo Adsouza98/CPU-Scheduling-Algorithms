@@ -1,0 +1,19 @@
+# Ignore Assignment Description Folder
+/docs
+/bin
+
+# Ignore Compiled Source Executables
+*.a
+*.o
+simcpu
+
+# Ignore OS generated Files
+.DS_Store
+.DS_Store?
+
+# Compressed Files
+*.tar
+*.gz
+*.7z
+*.zip
+*.rar
