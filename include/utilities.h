@@ -11,31 +11,11 @@
 #include "heapPriorityQueue.h"
 
 // Global Variables
-// extern char graded_FileName[100];
 extern int process_Size;
 extern int threadOverhead_Time;
 extern int processOverhead_Time;
 extern int size;
-extern ReadyQueue rdyQ[50];
-
-typedef struct {
-  int threadIONumber;
-  int cpu_Time;
-  int io_Time;
-} IO;
-
-typedef struct {
-  int threadNumber;
-  int arrivalTime;
-  int io_Size;
-  IO ioArray[100];
-} Threads;
-
-typedef struct {
-  int processNumber;
-  int thread_Size;
-  Threads threadsArray[50];
-} Process;
+extern ReadyQueue* rdyQ;
 
 typedef struct {
   int arrivalTime;
@@ -49,11 +29,9 @@ typedef struct {
 } ThreadInformation;
 
 int modeCheck(int argc, const char* argv[]);
-Process* getFileInput(Process* processes);
-void printFileInput(Process* processes);
+void getFileInput();
 int max(int num1, int num2);
 int min(int num1, int num2);
-void createReadyQueue(Process* p);
 void fcfs();
 void rr(int q);
 

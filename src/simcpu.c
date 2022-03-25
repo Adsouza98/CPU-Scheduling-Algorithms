@@ -16,7 +16,7 @@
 #include "utilities.h"
 
 extern int size;
-extern ReadyQueue rdyQ[50];
+extern ReadyQueue* rdyQ;
 extern ThreadInformation* threadTable;
 extern bool detailed_Mode;
 extern bool verbose_Mode;
@@ -32,11 +32,10 @@ int processOverhead_Time = 0;
 
 int main(int argc, char const *argv[]) {
 
-  Process* processes = NULL;
   int q = -1;
 
   q = modeCheck(argc, argv);
-  processes = getFileInput(processes);
+  getFileInput();
 
   if (rr_Mode == true) {
     if (q != -1) {
@@ -49,8 +48,9 @@ int main(int argc, char const *argv[]) {
     fcfs();
   }
 
-  free(processes);
+  // free(processes);
   free(threadTable);
+  free(rdyQ);
 
   return 0;
 }

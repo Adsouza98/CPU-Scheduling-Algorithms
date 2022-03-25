@@ -11,7 +11,7 @@
 
 // Global Variables
 int size = -1;
-ReadyQueue rdyQ[50];
+ReadyQueue* rdyQ = NULL;
 
 int parent(int i)
 {

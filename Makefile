@@ -6,6 +6,14 @@ LIB = ./lib/
 SRC = ./src/
 
 # Code snippet referenced from https://stackoverflow.com/a/14061796
+# This DOES NOT WORK with File Redirection (See README.md)
+# Thought I would still include it To show that I atleast attempted it.
+#
+# Please Run the program via the /bin folder Eg.(Not including the "[]" brackets)
+# $ make
+# $ cd bin/
+# $ ./simcpu [-d] [-v] [-r quantum] < input_file
+#
 ifeq (run,$(firstword $(MAKECMDGOALS)))
   RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
   $(eval $(RUN_ARGS):;@:)
