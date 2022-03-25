@@ -5,6 +5,10 @@ BIN = ./bin/
 LIB = ./lib/
 SRC = ./src/
 
+# Code snippet referenced from https://stackoverflow.com/a/14061796
+# MANAGE_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+# $(eval $(MANAGE_ARGS):;@:)
+
 # Override Default Variables
 CC = gcc																	# Compiler
 CFLAGS = -c -g -Wall -Wpedantic --std=gnu99 -Iinclude 	# C Compiler Flags
@@ -28,7 +32,7 @@ clean:
 	rm -f -r $(BIN)*
 
 run:
-	$(BIN)simcpu
+	$(BIN)simcpu #$(MANAGE_ARGS)
 
 valgrind:
-	valgrind --leak-check=yes $(BIN)simcpu
+	valgrind --leak-check=yes $(BIN)simcpu #$(MANAGE_ARGS)

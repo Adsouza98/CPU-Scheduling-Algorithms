@@ -6,9 +6,11 @@
  * This file comprises the functions to create and use the Heap Priority Queue
 */
 
-int size = -1;
-
 #include "heapPriorityQueue.h"
+
+// Global Variables
+int size = -1;
+ReadyQueue rdyQ[50];
 
 int parent(int i)
 {
@@ -27,46 +29,73 @@ int rightChild(int i)
 
 void shiftUp(int i)
 {
-  while (i > 0 && heap[parent(i)] < heap[i]) {
-    swap(&heap[parent(i)], &heap[i]);
-    i = parent(i);
+  while (i > 0 && rdyQ[parent(i)].arrivalTime >= rdyQ[i].arrivalTime) {
+    if (rdyQ[parent(i)].arrivalTime == rdyQ[i].arrivalTime) {
+      if (rdyQ[parent(i)].processNumber > rdyQ[i].processNumber) {
+        swap(&rdyQ[parent(i)], &rdyQ[i]);
+        i = parent(i);
+      } else {
+        return;
+      }
+    } else {
+      swap(&rdyQ[parent(i)], &rdyQ[i]);
+      i = parent(i);
+    }
   }
 }
 
 void shiftDown(int i)
 {
-  int maxIndex = i;
+  int minIndex = i;
   int l = leftChild(i);
 
-  if (l <= size && heap[l] > heap[maxIndex]) {
-    maxIndex = l;
+  if (l <= size && rdyQ[l].arrivalTime <= rdyQ[minIndex].arrivalTime) {
+    if (rdyQ[l].arrivalTime == rdyQ[minIndex].arrivalTime) {
+      if (rdyQ[l].processNumber < rdyQ[minIndex].arrivalTime) {
+        minIndex = l;
+      }
+    } else {
+      minIndex = l;
+    }
   }
 
   int r = rightChild(i);
 
-  if (r <= size && heap[r] > heap[maxIndex]) {
-    maxIndex = r;
+  if (r <= size && rdyQ[r].arrivalTime <= rdyQ[minIndex].arrivalTime) {
+    if (rdyQ[l].arrivalTime == rdyQ[minIndex].arrivalTime) {
+      if (rdyQ[l].processNumber < rdyQ[minIndex].arrivalTime) {
+        minIndex = r;
+      }
+    } else {
+      minIndex = r;
+    }
   }
 
-  if (i != maxIndex) {
-    swap(&heap[i], &heap[maxIndex]);
-    shiftDown(maxIndex);
+  if (i != minIndex) {
+    swap(&rdyQ[i], &rdyQ[minIndex]);
+    shiftDown(minIndex);
   }
 }
 
-void insert(int p)
+void insert(int a, int p, int t, int b, int cpu, int io, int entCPU)
 {
   size = size + 1;
-  heap[size] = p;
+  rdyQ[size].arrivalTime = a;
+  rdyQ[size].processNumber = p;
+  rdyQ[size].threadNumber = t;
+  rdyQ[size].burstNumber = b;
+  rdyQ[size].cpu = cpu;
+  rdyQ[size].io = io;
+  rdyQ[size].enterCPUTime = entCPU;
 
   shiftUp(size);
 }
 
-int extractMax()
+ReadyQueue extractMin()
 {
-  int result = heap[0];
+  ReadyQueue result = rdyQ[0];
 
-  heap[0] = heap[size];
+  rdyQ[0] = rdyQ[size];
   size = size - 1;
 
   shiftDown(0);
@@ -75,33 +104,45 @@ int extractMax()
 
 void changePriority(int i, int p)
 {
-  int oldp = heap[i];
-  heap[i] = p;
+  int oldp = rdyQ[i].arrivalTime;
+  rdyQ[i].arrivalTime = p;
 
-  if (p > oldp) {
+  if (p < oldp) {
     shiftUp(i);
   } else {
     shiftDown(i);
   }
 }
 
-int getMax()
+int findinHeap(int p, int t, int b)
 {
-  return heap[0];
+  int i = 0;
+  while (i <= size) {
+    if (rdyQ[i].processNumber == p && rdyQ[i].threadNumber == t && rdyQ[i].burstNumber == b+1) {
+      return i;
+    }
+    i++;
+  }
+  return -1;
+}
+
+ReadyQueue getMin()
+{
+  return rdyQ[0];
 }
 
 void removeFromHeap(int i)
 {
-  heap[i] = getMax() + 1;
+  rdyQ[i] = getMin();
 
   shiftUp(i);
 
-  extractMax();
+  extractMin();
 }
 
-void swap(int* a, int* b)
+void swap(ReadyQueue* a, ReadyQueue* b)
 {
-  int tmp = *b;
+  ReadyQueue tmp = *b;
   *b = *a;
   *a = tmp;
 }

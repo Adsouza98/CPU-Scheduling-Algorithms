@@ -4,13 +4,17 @@
 // Standard Libraries
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-//Global Variables
+// Local Libraries
+#include "heapPriorityQueue.h"
+
+// Global Variables
 extern int process_Size;
 extern int threadOverhead_Time;
 extern int processOverhead_Time;
-extern int thread_Size;
-extern int cpuSize;
+extern int size;
+extern ReadyQueue rdyQ[50];
 
 typedef struct {
   int threadIONumber;
@@ -31,7 +35,21 @@ typedef struct {
   Threads threadsArray[50];
 } Process;
 
-Process* getFileInput(char* fileName, Process* processes);
+typedef struct {
+  int arrivalTime;
+  int processNumber;
+  int threadNumber;
+  int serviceTime;
+  int ioTime;
+  int turnAroundTime;
+  int finishTime;
+} ThreadInformation;
+
+Process* getFileInput(const char* fileName, Process* processes);
 void printFileInput(Process* processes);
+int max(int num1, int num2);
+int min(int num1, int num2);
+void createReadyQueue(Process* p);
+void fcfs();
 
 #endif
