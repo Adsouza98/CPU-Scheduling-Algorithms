@@ -38,8 +38,13 @@ int main(int argc, char const *argv[]) {
   q = modeCheck(argc, argv);
   processes = getFileInput(processes);
 
-  if (rr_Mode == true && q != -1) {
-    rr(q);
+  if (rr_Mode == true) {
+    if (q != -1) {
+      rr(q);
+    } else {
+      printf("Invalid or Missing Quantum Number Exiting Program\n");
+      return(-1);
+    }
   } else {
     fcfs();
   }
