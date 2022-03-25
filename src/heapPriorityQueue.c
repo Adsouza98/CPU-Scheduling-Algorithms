@@ -77,7 +77,7 @@ void shiftDown(int i)
   }
 }
 
-void insert(int a, int p, int t, int b, int cpu, int io, int entCPU)
+void insert(int a, int p, int t, int b, int cpu, int io, bool dnf)
 {
   size = size + 1;
   rdyQ[size].arrivalTime = a;
@@ -86,7 +86,7 @@ void insert(int a, int p, int t, int b, int cpu, int io, int entCPU)
   rdyQ[size].burstNumber = b;
   rdyQ[size].cpu = cpu;
   rdyQ[size].io = io;
-  rdyQ[size].enterCPUTime = entCPU;
+  rdyQ[size].dnf = dnf;
 
   shiftUp(size);
 }

@@ -6,8 +6,10 @@ LIB = ./lib/
 SRC = ./src/
 
 # Code snippet referenced from https://stackoverflow.com/a/14061796
-# MANAGE_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-# $(eval $(MANAGE_ARGS):;@:)
+ifeq (run,$(firstword $(MAKECMDGOALS)))
+  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)), $(MAKECMDGOALS))
+  $(eval $(RUN_ARGS):;@:)
+endif
 
 # Override Default Variables
 CC = gcc																	# Compiler
@@ -32,7 +34,7 @@ clean:
 	rm -f -r $(BIN)*
 
 run:
-	$(BIN)simcpu #$(MANAGE_ARGS)
+	$(BIN)simcpu $(RUN_ARGS)
 
 valgrind:
-	valgrind --leak-check=yes $(BIN)simcpu #$(MANAGE_ARGS)
+	valgrind --leak-check=yes $(BIN)simcpu $(RUN_ARGS)

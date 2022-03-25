@@ -4,12 +4,14 @@
 // Standard Libraries
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <stdbool.h>
+#include <ctype.h>
 
 // Local Libraries
 #include "heapPriorityQueue.h"
 
 // Global Variables
+extern char graded_FileName[100];
 extern int process_Size;
 extern int threadOverhead_Time;
 extern int processOverhead_Time;
@@ -43,13 +45,16 @@ typedef struct {
   int ioTime;
   int turnAroundTime;
   int finishTime;
+  bool dnf;
 } ThreadInformation;
 
+int modeCheck(int argc, const char* argv[]);
 Process* getFileInput(const char* fileName, Process* processes);
 void printFileInput(Process* processes);
 int max(int num1, int num2);
 int min(int num1, int num2);
 void createReadyQueue(Process* p);
 void fcfs();
+void rr(int q);
 
 #endif
