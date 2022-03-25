@@ -2,8 +2,8 @@
  * Andre D'Souza
  * #:0952594
  * Deadline: 03/16/22
- * Extension: 03/23/22
- *
+ * Grace Period: 03/19/22
+ * Extension: 03/26/22
  * This File comprises of the main.c infinite loop of the program
 */
 
@@ -18,9 +18,11 @@
 extern int size;
 extern ReadyQueue rdyQ[50];
 extern ThreadInformation* threadTable;
+extern bool detailed_Mode;
+extern bool verbose_Mode;
+extern bool rr_Mode;
 
 // Global Variables
-char graded_FileName[100];
 const char test_FileName_FCFS[100] = "Test/FCFS/FCFS.txt";
 const char test_FileName_RR[100] = "Test/RR/RR.txt";
 
@@ -30,18 +32,20 @@ int processOverhead_Time = 0;
 
 int main(int argc, char const *argv[]) {
 
-  //Process* processes = NULL;
+  Process* processes = NULL;
   int q = -1;
 
   q = modeCheck(argc, argv);
-  printf("Quantum Value = %d\n", q);
-  //processes = getFileInput(test_FileName_FCFS, processes);
+  processes = getFileInput(processes);
 
-  //fcfs();
-  //rr(50);
+  if (rr_Mode == true && q != -1) {
+    rr(q);
+  } else {
+    fcfs();
+  }
 
-  // free(processes);
-  // free(threadTable);
+  free(processes);
+  free(threadTable);
 
   return 0;
 }

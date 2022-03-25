@@ -2,7 +2,8 @@
  * Andre D'Souza
  * #:0952594
  * Deadline: 03/16/22
- * Extension: 03/23/22
+ * Grace Period: 03/19/22
+ * Extension: 03/26/22
  * This file comprises the utility functions for the program
 */
 #include "utilities.h"
@@ -17,83 +18,86 @@ int modeCheck(int argc, const char* argv[])
 {
   int i = 0;
   int q = -1;
-  int tmp = 0;
-  bool validinput = false;
 
   for (i=0; i<argc; i++) {
-    printf("argv[%d] = %s\n", i, argv[i]);
+    // printf("argv[%d] = %s\n", i, argv[i]);
     if (strcmp(argv[i], "-dvr") == 0) {
-      printf("Detailed, Verbose, RR Modes Enabled\n");
+      // printf("Detailed, Verbose, RR Modes Enabled\n");
       detailed_Mode = true;
       verbose_Mode = true;
       rr_Mode = true;
     } else if (strcmp(argv[i], "-dv") == 0) {
-      printf("Detailed, Verbose Modes Enabled\n");
+      // printf("Detailed, Verbose Modes Enabled\n");
       detailed_Mode = true;
       verbose_Mode = true;
     } else if (strcmp(argv[i], "-dr") == 0) {
-      printf("Detailed, RR Modes Enabled\n");
+      // printf("Detailed, RR Modes Enabled\n");
       detailed_Mode = true;
+      rr_Mode = true;
+    } else if (strcmp(argv[i], "-vr") == 0) {
+      // printf("Verbose, RR Modes Enabled\n");
       verbose_Mode = true;
+      rr_Mode = true;
     } else if (strcmp(argv[i], "-d") == 0) {
-      printf("Detailed Mode Enabled\n");
+      // printf("Detailed Mode Enabled\n");
       detailed_Mode = true;
     } else if (strcmp(argv[i], "-v") == 0) {
-      printf("Verbose Mode Enabled\n");
+      // printf("Verbose Mode Enabled\n");
+      verbose_Mode = true;
     } else if (strcmp(argv[i], "-r") == 0) {
+      // printf("Round Robin Scheduling Mode\n");
       rr_Mode = true;
-      printf("Round Robin Scheduling Mode\n");
-    } else if (rr_Mode == true && isdigit(argv[i]) == 1) {
+    } else if (rr_Mode == true) {
       q = atoi(argv[i]);
-    } else if (strcmp(argv[i], "<") == 0) {
-      tmp = i + 1;
-      if (tmp < argc) {
-        strcpy(graded_FileName, argv[i]);
-        validinput = true;
-      } else {
-        validinput = false;
-      }
+      // printf("Quantum Value = %d\n", q);
     }
   }
-  if (validinput == false) {
-    printf("Invalid Input, Missing Filename Exiting Program\n");
-    //exit(-1);
-  }
+
   return q;
 }
 
-Process* getFileInput(const char* fileName, Process* p)
+Process* getFileInput(Process* p)
 {
-  FILE* fp;
+  //FILE* fp;
   int i, j, k;
   int numThreads = 0;
 
-  fp = fopen(fileName, "r");
-  if (fp == NULL) {
-    fprintf(stderr,"\nFailed to Open File\n");
-    exit(-1);
-  }
+  // fp = fopen(fileName, "r");
+  // if (fp == NULL) {
+  //   fprintf(stderr,"\nFailed to Open File\n");
+  //   exit(-1);
+  // }
 
-  fscanf(fp, "%d %d %d", &process_Size, &threadOverhead_Time, &processOverhead_Time);
+  fscanf(stdin, "%d %d %d", &process_Size, &threadOverhead_Time, &processOverhead_Time);
 
   p = (Process*)malloc(process_Size * sizeof(Process));
 
   for (i = 0; i<process_Size; i++) {
-    fscanf(fp, "%d %d", &p[i].processNumber, &p[i].thread_Size);
+    fscanf(stdin, "%d %d", &p[i].processNumber, &p[i].thread_Size);
     numThreads += p[i].thread_Size;
     for (j = 0; j<p[i].thread_Size; j++) {
-      fscanf(fp, "%d %d %d", &p[i].threadsArray[j].threadNumber, &p[i].threadsArray[j].arrivalTime, &p[i].threadsArray[j].io_Size);
+      fscanf(stdin, "%d %d %d", &p[i].threadsArray[j].threadNumber, &p[i].threadsArray[j].arrivalTime, &p[i].threadsArray[j].io_Size);
       for (k = 0; k<p[i].threadsArray[j].io_Size-1; k++) {
-        fscanf(fp, "%d %d %d", &p[i].threadsArray[j].ioArray[k].threadIONumber, &p[i].threadsArray[j].ioArray[k].cpu_Time, &p[i].threadsArray[j].ioArray[k].io_Time);
+        fscanf(stdin, "%d %d %d", &p[i].threadsArray[j].ioArray[k].threadIONumber, &p[i].threadsArray[j].ioArray[k].cpu_Time, &p[i].threadsArray[j].ioArray[k].io_Time);
         if (k == 0) {
           insert(p[i].threadsArray[j].arrivalTime, p[i].processNumber, p[i].threadsArray[j].threadNumber, p[i].threadsArray[j].ioArray[k].threadIONumber, p[i].threadsArray[j].ioArray[k].cpu_Time, p[i].threadsArray[j].ioArray[k].io_Time, 0);
+
+          // if (verbose_Mode == true) {
+          //   printf("At Time %d: Thread %d of Process %d moves from new to ready\n", p[i].threadsArray[j].arrivalTime, p[i].threadsArray[j].threadNumber, p[i].processNumber);
+          // }
+
         } else {
           insert(999, p[i].processNumber, p[i].threadsArray[j].threadNumber, p[i].threadsArray[j].ioArray[k].threadIONumber, p[i].threadsArray[j].ioArray[k].cpu_Time, p[i].threadsArray[j].ioArray[k].io_Time, 0);
         }
       }
-      fscanf(fp, "%d %d", &p[i].threadsArray[j].ioArray[p[i].threadsArray[j].io_Size].threadIONumber, &p[i].threadsArray[j].ioArray[p[i].threadsArray[j].io_Size].cpu_Time);
+      fscanf(stdin, "%d %d", &p[i].threadsArray[j].ioArray[p[i].threadsArray[j].io_Size].threadIONumber, &p[i].threadsArray[j].ioArray[p[i].threadsArray[j].io_Size].cpu_Time);
       if (k == 0) {
         insert(p[i].threadsArray[j].arrivalTime, p[i].processNumber, p[i].threadsArray[j].threadNumber, p[i].threadsArray[j].ioArray[p[i].threadsArray[j].io_Size].threadIONumber, p[i].threadsArray[j].ioArray[p[i].threadsArray[j].io_Size].cpu_Time, 0, 0);
+
+        // if (verbose_Mode == true) {
+        //   printf("At Time %d: Thread %d of Process %d moves from new to ready\n", p[i].threadsArray[j].arrivalTime, p[i].threadsArray[j].threadNumber, p[i].processNumber);
+        // }
+
       } else {
         insert(999, p[i].processNumber, p[i].threadsArray[j].threadNumber, p[i].threadsArray[j].ioArray[p[i].threadsArray[j].io_Size].threadIONumber, p[i].threadsArray[j].ioArray[p[i].threadsArray[j].io_Size].cpu_Time, 0, 0);
       }
@@ -102,7 +106,7 @@ Process* getFileInput(const char* fileName, Process* p)
 
   threadTable = (ThreadInformation*)malloc((numThreads) * sizeof(ThreadInformation));
   table_size = numThreads;
-  fclose(fp);
+  //fclose(fp);
   return p;
 }
 
@@ -169,6 +173,9 @@ void fcfs()
   while (size != -1) {
     tmp = extractMin();
 
+    if (verbose_Mode == true) {
+      printf("At Time %d: Thread %d of Process %d moves from new to ready\n", tmp.arrivalTime, tmp.threadNumber, tmp.processNumber);
+    }
     // Update Overhead Costs (First Burst vs Process vs Thread)
     if (prev_process == 0) {
       overHeadCost = 0;
@@ -180,6 +187,9 @@ void fcfs()
 
     // Update all Previous Varaibels used to calculate following Burst Arrival Time
     tmp_EnterCPU = prev_CPU + overHeadCost + prev_EnterCPU;
+    if (verbose_Mode == true) {
+      printf("At Time %d: Thread %d of Process %d moves from ready to running\n", tmp_EnterCPU, tmp.threadNumber, tmp.processNumber);
+    }
     prev_process = tmp.processNumber;
     prev_thread = tmp.threadNumber;
     prev_CPU = tmp.cpu;
@@ -187,6 +197,9 @@ void fcfs()
 
     // Update Run Time
     tmp_RunTime = tmp_EnterCPU + tmp.cpu;
+    if (verbose_Mode == true) {
+      printf("At Time %d: Thread %d of Process %d moves from running to terminated\n", tmp_RunTime, tmp.threadNumber, tmp.processNumber);
+    }
 
     // Update Total Time in CPU
     timeinCPU += tmp.cpu;
@@ -260,14 +273,17 @@ void fcfs()
 
   printf("Total Time Required = %d units\n", totalRunTime);
   printf("Average Turnaround Time is %.1lf\n", avgTurnaroundTime);
-  // printf("Total Time in CPU = %d units\n", timeinCPU);
   printf("CPU Utilization is %.1lf\n", utilizationCPU);
+  // printf("Total Time in CPU = %d units\n", timeinCPU);
 
-  for (i = 0; i < table_size; i++) {
-    printf("Thread %d of Process %d:\n", threadTable[i].threadNumber, threadTable[i].processNumber);
-    printf("Arrival Time: %d\n", threadTable[i].arrivalTime);
-    printf("Service Time: %d units, I/O Time: %d units, Turnaround Time: %d units, Finish Time: %d units\n", threadTable[i].serviceTime, threadTable[i].ioTime, threadTable[i].turnAroundTime, threadTable[i].finishTime);
+  if (detailed_Mode == true) {
+    for (i = 0; i < table_size; i++) {
+      printf("Thread %d of Process %d:\n", threadTable[i].threadNumber, threadTable[i].processNumber);
+      printf("Arrival Time: %d\n", threadTable[i].arrivalTime);
+      printf("Service Time: %d units, I/O Time: %d units, Turnaround Time: %d units, Finish Time: %d units\n", threadTable[i].serviceTime, threadTable[i].ioTime, threadTable[i].turnAroundTime, threadTable[i].finishTime);
+    }
   }
+
 
 }
 
@@ -301,6 +317,10 @@ void rr(int q)
   while (size != -1) {
     tmp = extractMin();
 
+    if (verbose_Mode == true) {
+      printf("At Time %d: Thread %d of Process %d moves from new to ready\n", tmp.arrivalTime, tmp.threadNumber, tmp.processNumber);
+    }
+
     // Update Overhead Costs (First Burst vs Process vs Thread)
     if (prev_process == 0) {
       overHeadCost = 0;
@@ -314,6 +334,11 @@ void rr(int q)
 
     // Update all Previous Variables used to calcuate following Burst Arrival Time
     tmp_EnterCPU = prev_CPU + overHeadCost + prev_EnterCPU;
+
+    if (verbose_Mode == true) {
+      printf("At Time %d: Thread %d of Process %d moves from ready to running\n", tmp_EnterCPU, tmp.threadNumber, tmp.processNumber);
+    }
+
     if (tmp.arrivalTime > tmp_EnterCPU) {
       tmp_EnterCPU = tmp.arrivalTime;
     }
@@ -335,6 +360,14 @@ void rr(int q)
 
     // Update Run Time
     tmp_RunTime = tmp_EnterCPU + prev_CPU;
+
+    if (verbose_Mode == true) {
+      if (dnf == false) {
+        printf("At Time %d: Thread %d of Process %d moves from running to terminated\n", tmp_RunTime, tmp.threadNumber, tmp.processNumber);
+      } else {
+        printf("At Time %d: Thread %d of Process %d moves from running to blocked\n", tmp_RunTime, tmp.threadNumber, tmp.processNumber);
+      }
+    }
 
     // Update Total Time in CPU
     timeinCPU += tmp.cpu;
@@ -416,11 +449,12 @@ void rr(int q)
   // printf("Total Time in CPU = %d units\n", timeinCPU);
   printf("CPU Utilization is %.1lf\n", utilizationCPU);
 
-  for (i = 0; i < table_size; i++) {
-    printf("Thread %d of Process %d:\n", threadTable[i].threadNumber, threadTable[i].processNumber);
-    printf("Arrival Time: %d\n", threadTable[i].arrivalTime);
-    printf("Service Time: %d units, I/O Time: %d units, Turnaround Time: %d units, Finish Time: %d units\n", threadTable[i].serviceTime, threadTable[i].ioTime, threadTable[i].turnAroundTime, threadTable[i].finishTime);
+  if (detailed_Mode == true) {
+    for (i = 0; i < table_size; i++) {
+      printf("Thread %d of Process %d:\n", threadTable[i].threadNumber, threadTable[i].processNumber);
+      printf("Arrival Time: %d\n", threadTable[i].arrivalTime);
+      printf("Service Time: %d units, I/O Time: %d units, Turnaround Time: %d units, Finish Time: %d units\n", threadTable[i].serviceTime, threadTable[i].ioTime, threadTable[i].turnAroundTime, threadTable[i].finishTime);
+    }
   }
-
 
 }
