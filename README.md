@@ -113,6 +113,7 @@ Here's a video of my Capstone update if you are interested in it:
 https://youtu.be/qEqmThmMtkU
 
 ################################# Git History ##################################
+* 9d5e1e1 2022-03-25 | Cleaned up Code added Comments (HEAD -> master) [Andre D'Souza]
 * c3c3bfb 2022-03-25 | Updated README.md file (HEAD -> master) [Andre D'Souza]
 * 7f99298 2022-03-25 | Completed Assignment - Added File Redirection and Mode Selection via CLI [Andre D'Souza]
 * 0bd1706 2022-03-25 | Completed Round Robin [Andre D'Souza]
