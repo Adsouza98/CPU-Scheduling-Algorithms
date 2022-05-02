@@ -87,31 +87,6 @@ If No quantum number is provided the program will interpret it as invalid input
 and exit the program, the quantum number should be the last argument before
 the file redirection as stated in the Assignment Description.
 
-############################ Extension to 03/26/22 #############################
-I emailed the Professor a week before the deadline asking for an extension
-because of my ENGG*41X Capstone Project work load. She gave me a 1 week extension.
-She did not specify a date in the email only an extension of 1 week, so I
-interpreted as 1 week from the grace-period, which is 03/26/22.
-
-I interpreted this way because of the discord channel as other students said it
-was 1 week from the grace-period date. I did not choose to email the professor
-again to verify because at the time she was receiving many regrade requests from
-other students about A1.
-
-By looking at the Git History section you can see I completed the assignment in
-about 3 days, so I didn't need a lot of time to complete the assignment, its just
-that I am so busy with 41X right now that my time had to be allocated to my Final
-Engg. Design course.
-
-I hope this assumption I made is okay and valid.
-
-P.S:
-My capstone project is an automated (unintrusive) shopping cart prototype that
-uses the traveling salesman algorithm to traverse a common grocery store without
-the need of cameras.
-Here's a video of my Capstone update if you are interested in it:
-https://youtu.be/qEqmThmMtkU
-
 ################################# Git History ##################################
 * 9d5e1e1 2022-03-25 | Cleaned up Code added Comments (HEAD -> master) [Andre D'Souza]
 * c3c3bfb 2022-03-25 | Updated README.md file (HEAD -> master) [Andre D'Souza]
